@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management - Add Product</title>
+    <link rel="stylesheet" href="products.html">
+    <style>
+        body { font-family: 'Poppins', sans-serif; padding: 20px; background: linear-gradient(135deg, #00c6ff, #0072ff); text-align: center; color: #fff; }
+        .container { max-width: 600px; margin: auto; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); }
+        h2 { color: #ffeb3b; font-size: 26px; }
+        input, button { margin: 5px; padding: 12px; border-radius: 8px; border: none; font-size: 16px; }
+        input { width: calc(100% - 24px); background: rgba(255, 255, 255, 0.2); color: #fff; border: 1px solid #fff; }
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
+        button { cursor: pointer; padding: 12px 18px; border-radius: 8px; transition: 0.3s; font-weight: bold; }
+        .add-btn { background-color: #4CAF50; color: white; }
+        .clear-btn { background-color: #d32f2f; color: white; }
+        .view-btn { background-color: #ff9800; color: white; }
+        button:hover { transform: scale(1.1); opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Product</h2>
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="number" id="productStock" placeholder="Stock">
+        <input type="number" id="productPrice" placeholder="Price (Rs)">
+        <input type="date" id="stockDate" placeholder="Stock Date">
+        <input type="date" id="expiryDate" placeholder="Expiry Date">
+        <button class="add-btn" onclick="addProduct()">Add</button>
+        <button class="clear-btn" onclick="clearFields()">Clear</button>
+        <br>
+        <button class="view-btn" onclick="window.location.href='products.html'">View Products</button>
+    </div><script>
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+
+    function addProduct() {
+        const name = document.getElementById('productName').value;
+        const stock = document.getElementById('productStock').value;
+        const price = document.getElementById('productPrice').value;
+        const stockDate = document.getElementById('stockDate').value;
+        const expiryDate = document.getElementById('expiryDate').value;
+        
+        if (name && stock && price && stockDate && expiryDate) {
+            products.push({ name, stock: parseInt(stock), price: parseFloat(price), stockDate, expiryDate });
+            localStorage.setItem('products', JSON.stringify(products));
+            clearFields();
+        }
+    }
+
+    function clearFields() {
+        document.getElementById('productName').value = '';
+        document.getElementById('productStock').value = '';
+        document.getElementById('productPrice').value = '';
+        document.getElementById('stockDate').value = '';
+        document.getElementById('expiryDate').value = '';
+    }
+</script>
+
+</body>
+</html>

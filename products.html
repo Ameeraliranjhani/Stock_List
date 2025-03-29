@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; padding: 20px; background: linear-gradient(135deg, #87CEFA, #00BFFF); text-align: center; color: #fff; }
+        .container { max-width: 600px; margin: auto; background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 15px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); text-align: left; }
+        h2 { color: #ffffff; font-size: 28px; margin-bottom: 20px; text-align: center; }
+        .product-item { background: rgba(255, 255, 255, 0.3); padding: 15px; margin-bottom: 10px; border-radius: 10px; color: #000; position: relative; }
+        .product-item strong { color: #333; }
+        .btn-container { margin-top: 10px; display: flex; gap: 10px; }
+        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .edit-btn { background: #ffeb3b; color: #333; }
+        .delete-btn { background: #f44336; color: white; }
+        .clear-btn { display: block; margin: 20px auto; padding: 12px 20px; border: none; border-radius: 8px; background: #d32f2f; color: white; font-size: 18px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .clear-btn:hover, .btn:hover { opacity: 0.8; }
+        .back-btn { display: block; margin: 20px auto; padding: 12px 20px; border: none; border-radius: 8px; background: #ff9800; color: white; font-size: 18px; cursor: pointer; transition: 0.3s; font-weight: bold; text-align: center; }
+        .back-btn:hover { transform: scale(1.1); opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Product List</h2>
+        <div id="productList"></div>
+        <button class="clear-btn" onclick="clearProducts()">Clear All Products</button>
+        <button class="back-btn" onclick="window.location.href='Stock.html'">Back to Add Product</button>
+    </div><script>
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    const productList = document.getElementById('productList');
+
+    function loadProducts() {
+        productList.innerHTML = '';
+        products.forEach((product, index) => {
+            let item = `<div class="product-item">
+                <p><strong>Product Name:</strong> ${product.name}</p>
+                <p><strong>Stock:</strong> ${product.stock}</p>
+                <p><strong>Price (Rs):</strong> Rs ${product.price.toFixed(2)}</p>
+                <p><strong>Stock Date:</strong> ${product.stockDate}</p>
+                <p><strong>Expiry Date:</strong> ${product.expiryDate}</p>
+                <div class="btn-container">
+                    <button class="btn edit-btn" onclick="editProduct(${index})">Edit</button>
+                    <button class="btn delete-btn" onclick="deleteProduct(${index})">Delete</button>
+                </div>
+            </div>`;
+            productList.innerHTML += item;
+        });
+    }
+
+    function editProduct(index) {
+        let product = products[index];
+        let newName = prompt("Enter new product name:", product.name);
+        let newStock = prompt("Enter new stock quantity:", product.stock);
+        let newPrice = prompt("Enter new price (Rs):", product.price);
+        let newStockDate = prompt("Enter new stock date:", product.stockDate);
+        let newExpiryDate = prompt("Enter new expiry date:", product.expiryDate);
+        
+        if (newName && newStock && newPrice && newStockDate && newExpiryDate) {
+            products[index] = {
+                name: newName,
+                stock: parseInt(newStock),
+                price: parseFloat(newPrice),
+                stockDate: newStockDate,
+                expiryDate: newExpiryDate
+            };
+            localStorage.setItem('products', JSON.stringify(products));
+            loadProducts();
+        }
+    }
+
+    function deleteProduct(index) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            products.splice(index, 1);
+            localStorage.setItem('products', JSON.stringify(products));
+            loadProducts();
+        }
+    }
+
+    function clearProducts() {
+        if (confirm("Are you sure you want to clear all products?")) {
+            localStorage.removeItem('products');
+            products = [];
+            loadProducts();
+        }
+    }
+
+    loadProducts();
+</script>
+
+</body>
+</html>
